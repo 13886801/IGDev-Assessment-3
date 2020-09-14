@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
     public GameObject[] Tiles = new GameObject[7];
+    public GameObject pacman;
 
     public void Generate(int tileID, float x, float y, float angle, int area) {
         GameObject tile = Instantiate(Tiles[tileID - 1], new Vector3(x, y, 0), Quaternion.Euler(new Vector3(0, 0, angle)));
@@ -72,6 +74,8 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
+
+        Instantiate(pacman, new Vector3(1, 9, 0), quaternion.identity);
     }
 
     // Update is called once per frame

@@ -333,6 +333,7 @@ MonoBehaviour:
   - {fileID: 671260404248997244, guid: 38fe62eaa918d1c4f903a924aaba7d5c, type: 3}
   - {fileID: 2705545560965026242, guid: 9f2be5300097147488640742c5a281d6, type: 3}
   - {fileID: 3042503005459075733, guid: 2561f13aef3768d4f8cd4abec7d7a380, type: 3}
+  pacman: {fileID: 75273448097682819, guid: 6f323cd738f85af43903b1fedd264a21, type: 3}
 --- !u!4 &1800141086
 Transform:
   m_ObjectHideFlags: 0
