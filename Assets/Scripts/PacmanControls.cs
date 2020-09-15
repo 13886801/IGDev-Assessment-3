@@ -10,6 +10,7 @@ public class PacmanControls : MonoBehaviour
     private float preAngle = 0;
 
     private KeyCode[] movement = new KeyCode[] { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
+    private KeyCode[] movement2 = new KeyCode[] { KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow };
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +22,7 @@ public class PacmanControls : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            if (Input.GetKeyDown(movement[i]))
+            if (Input.GetKeyDown(movement[i]) || Input.GetKeyDown(movement2[i]))
             {
                 angle = 90f * i;
             }
