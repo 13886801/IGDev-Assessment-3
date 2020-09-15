@@ -75,7 +75,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        Instantiate(pacman, new Vector3(1, 9, 0), quaternion.identity);
+        Instantiate(pacman, new Vector3(1, 9, -1), quaternion.identity);
     }
 
     // Update is called once per frame

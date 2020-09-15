@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1d957c4a34b9a7843aa46146aae145b1
+guid: 28af0620862e1dd49b83a499c5dc7473
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -11,6 +11,21 @@ TextureImporter:
   - first:
       213: -5117255910089929328
     second: Pacman_2
+  - first:
+      213: 2740536928371084324
+    second: Pacman_3
+  - first:
+      213: 6980233407664102775
+    second: Pacman_4
+  - first:
+      213: -8013500012710627186
+    second: Pacman_5
+  - first:
+      213: 9205931174978888541
+    second: Pacman_6
+  - first:
+      213: 8516047484414068260
+    second: Pacman_7
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -111,7 +126,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 100
+        y: 200
         width: 100
         height: 100
       alignment: 0
@@ -132,7 +147,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 100
-        y: 100
+        y: 200
         width: 100
         height: 100
       alignment: 0
@@ -152,8 +167,8 @@ TextureImporter:
       name: Pacman_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 200
+        y: 200
         width: 100
         height: 100
       alignment: 0
@@ -169,10 +184,115 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Pacman_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42c066df0d7580620800000000000000
+      internalID: 2740536928371084324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pacman_4
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77d12292d45ced060800000000000000
+      internalID: 6980233407664102775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pacman_5
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 100
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e887bce12345ac090800000000000000
+      internalID: -8013500012710627186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pacman_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d53af47e0a902cf70800000000000000
+      internalID: 9205931174978888541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pacman_7
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 0
+        width: 100
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4260cde21141f2670800000000000000
+      internalID: 8516047484414068260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 590d6da21f930664096eac508f998355
+    spriteID: f3f4fc1564ad4c94dae4f635743b1d90
     internalID: 0
     vertices: []
     indices: 
