@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 34975588}
   - component: {fileID: 34975587}
   - component: {fileID: 34975586}
+  - component: {fileID: 34975589}
   m_Layer: 0
   m_Name: Pacman (Fish) Spritesheet
   m_TagString: Untagged
@@ -223,6 +224,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &34975589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34975585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a9f690b69ac3a45bbfb694f7ba5955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trigger: {fileID: 34975586}
 --- !u!1 &216675112
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,6 +504,7 @@ GameObject:
   - component: {fileID: 1224336413}
   - component: {fileID: 1224336412}
   - component: {fileID: 1224336411}
+  - component: {fileID: 1224336414}
   m_Layer: 0
   m_Name: Jellyfish (Ghost) Spritesheet
   m_TagString: Untagged
@@ -581,6 +596,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1224336414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224336410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a9f690b69ac3a45bbfb694f7ba5955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trigger: {fileID: 1224336411}
 --- !u!1 &1614210964
 GameObject:
   m_ObjectHideFlags: 0
