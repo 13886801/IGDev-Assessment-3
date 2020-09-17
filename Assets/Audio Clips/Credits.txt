@@ -3,3 +3,10 @@ Sound Effects:
 "Fish in aquarium" by Julien Nicolas available at
 https://freesound.org/people/Julien%20Nicolas/sounds/133793/ under a Creative Commons Attribution 3.0.
 Full terms at https://creativecommons.org/licenses/by/3.0/
+
+Background Musics:
+
+Intro Music: Deep blue from https://www.bensound.com/
+Normal State Music: Slow Motion from https://www.bensound.com/
+Scared State Music: Adventure from https://www.bensound.com/
+One Death State Music: Perception from https://www.bensound.com/
