@@ -1,10 +1,11 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LevelGenerator : MonoBehaviour
 {
     public GameObject[] Tiles = new GameObject[7];
-    public GameObject pacman;
+    public GameObject[] pacman = new GameObject[2];
 
     public void Generate(int tileID, float x, float y, float angle, int area) {
         GameObject tile = Instantiate(Tiles[tileID - 1], new Vector3(x, y, 0), Quaternion.Euler(new Vector3(0, 0, angle)));
@@ -72,7 +73,11 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        Instantiate(pacman, new Vector3(1, 9, -1), quaternion.identity);
+        Instantiate(pacman[0], new Vector3(1, 9, -1), quaternion.identity);
+        for (int i = 0; i < 3; i++)
+        {
+            Instantiate(pacman[1], new Vector3(i, -15, -1), quaternion.identity);
+        }
     }
 
     // Update is called once per frame
