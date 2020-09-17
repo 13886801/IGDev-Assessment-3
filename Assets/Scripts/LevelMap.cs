@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class LevelMap
+﻿public class LevelMap
 {
     private int[,] Map = { //14x15
     {1,2,2,2,2,2,2,2,2,2,2,2,2,7},

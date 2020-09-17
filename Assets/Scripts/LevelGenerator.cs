@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour

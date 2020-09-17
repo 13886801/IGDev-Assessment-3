@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PacmanControls : MonoBehaviour
 {
     public GameObject pacman;
+    public AudioSource swim;
+
     private float angle = 0;
     private float preAngle = 0;
+    private float time = 0;
 
     private KeyCode[] movement = new KeyCode[] { KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D };
     private KeyCode[] movement2 = new KeyCode[] { KeyCode.UpArrow, KeyCode.LeftArrow, KeyCode.DownArrow, KeyCode.RightArrow };
@@ -15,6 +15,7 @@ public class PacmanControls : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        swim = pacman.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -32,6 +33,13 @@ public class PacmanControls : MonoBehaviour
         {
             pacman.transform.eulerAngles = new Vector3(0, 0, angle);
             preAngle = angle;
+        }
+
+        time += Time.deltaTime;
+        if (time > 0.5)
+        {
+            time = 0;
+            swim.Play();
         }
     }
 }
