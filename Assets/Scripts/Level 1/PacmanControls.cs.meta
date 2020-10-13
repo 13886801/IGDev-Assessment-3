@@ -3,7 +3,10 @@ guid: a48b86b459eb05543bfc95e6d9235805
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - pacman: {fileID: 5705936454152395218, guid: 6ebed8e1f37dc46439f52ab1f684c4ad,
+      type: 3}
+  - swim: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
