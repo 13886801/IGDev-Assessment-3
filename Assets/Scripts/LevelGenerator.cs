@@ -10,9 +10,6 @@ public class LevelGenerator : MonoBehaviour
     void Start()
     {
         GameObject topLeft = new GameObject();
-        GameObject topRight;
-        GameObject bottomLeft;
-        GameObject bottomRight;
 
         topLeft.transform.parent = gameObject.transform;
         topLeft.name = "topLeft";
@@ -38,25 +35,27 @@ public class LevelGenerator : MonoBehaviour
                     ).transform.parent = topLeft.transform;
             }
         }
-        topRight = Instantiate(topLeft, new Vector3(27, 0, 0), Quaternion.identity);
-        topRight.name = "topRight";
-        topRight.transform.parent = gameObject.transform;
-        topRight.transform.localScale = new Vector3(-1, 1, 1);
 
-        bottomLeft = Instantiate(topLeft, new Vector3(0, 0, 0), Quaternion.identity);
-        bottomLeft.name = "bottomLeft";
-        bottomLeft.transform.parent = gameObject.transform;
-        bottomLeft.transform.localScale = new Vector3(1, -1, 1);
+        string[] names = { "topRight", "bottomLeft", "bottomRight"};
+        Vector3[] positions = { new Vector3(27, 0, 0), new Vector3(0, 0, 0), new Vector3(27, 0, 0) };
+        Vector3[] scales = { new Vector3(-1, 1, 1), new Vector3(1, -1, 1), new Vector3(-1, -1, 1) };
+        GameObject[] levelParts = new GameObject[3];
 
-        bottomRight = Instantiate(topLeft, new Vector3(27, 0, 0), Quaternion.identity);
-        bottomRight.name = "bottomRight";
-        bottomRight.transform.parent = gameObject.transform;
-        bottomRight.transform.localScale = new Vector3(-1, -1, 1);
-
-        Instantiate(pacman[0], new Vector3(1, 9, -1), quaternion.identity);
         for (int i = 0; i < 3; i++)
         {
-            Instantiate(pacman[1], new Vector3(i, -15, -1), quaternion.identity);
+            levelParts[i] = Instantiate(topLeft, positions[i], Quaternion.identity);
+            levelParts[i].transform.parent = gameObject.transform;
+            levelParts[i].transform.localScale = scales[i];
+            levelParts[i].name = names[i];
+        }
+
+        Instantiate(pacman[0], new Vector3(1, 9, -1), quaternion.identity);
+
+        GameObject lives = new GameObject();
+        lives.name = "Lives";
+        for (int i = 0; i < 3; i++)
+        {
+            Instantiate(pacman[1], new Vector3(i, -15, -1), quaternion.identity).transform.parent = lives.transform;
         }
     }
 }
