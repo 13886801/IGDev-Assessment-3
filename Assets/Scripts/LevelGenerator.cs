@@ -6,49 +6,20 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] Tiles = new GameObject[7];
     public GameObject[] pacman = new GameObject[2];
 
-    public void Generate(int tileID, float x, float y, float angle, int area) {
-        GameObject tile = Instantiate(Tiles[tileID - 1], new Vector3(x, y, 0), Quaternion.Euler(new Vector3(0, 0, angle)));
-        if (!(tileID % 2 == 1 && tileID < 5))
-        {
-            if (tileID == 7 && area > 1)
-            {
-                tile.GetComponent<SpriteRenderer>().flipY = true;
-            }
-            return;
-        }
-
-        switch (area)
-        {
-            case 1:
-                tile.GetComponent<SpriteRenderer>().flipX = true;
-                if (angle % 90f == 0)
-                {
-                    tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
-                }
-                break;
-
-            case 2:
-                tile.GetComponent<SpriteRenderer>().flipY = true;
-                if (angle % 90f == 0)
-                {
-                    tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
-                }
-                break;
-
-            case 3:
-                tile.GetComponent<SpriteRenderer>().flipX = true;
-                tile.GetComponent<SpriteRenderer>().flipY = true;
-                break;
-        }
-    }
-
     // Start is called before the first frame update
     void Start()
     {
+        GameObject topLeft = new GameObject();
+        GameObject topRight;
+        GameObject bottomLeft;
+        GameObject bottomRight;
+
+        topLeft.transform.parent = gameObject.transform;
+        topLeft.name = "topLeft";
+
         LevelMap levelMap = new LevelMap();
         int tileID;
         float angle;
-
 
         for (int y = 14; y >= 0; y--)
         {
@@ -60,27 +31,32 @@ public class LevelGenerator : MonoBehaviour
                 }
 
                 angle = levelMap.getAngle(y, x);
-
-                Generate(tileID, x, 14 - y, angle, 0); //Normal, top left
-                Generate(tileID, 27 - x, 14 - y, angle, 1); //top right
-
-                if (y != 14)
-                {
-                    Generate(tileID, x, y - 14, angle, 2); //bottom left
-                    Generate(tileID, 27 - x, y - 14, angle, 3); //bottom right
-                }
+                Instantiate(
+                    Tiles[tileID - 1],
+                    new Vector3(x, 14 - y, 0),
+                    Quaternion.Euler(new Vector3(0, 0, angle))
+                    ).transform.parent = topLeft.transform;
             }
         }
+        topRight = Instantiate(topLeft, new Vector3(27, 0, 0), Quaternion.identity);
+        topRight.name = "topRight";
+        topRight.transform.parent = gameObject.transform;
+        topRight.transform.localScale = new Vector3(-1, 1, 1);
+
+        bottomLeft = Instantiate(topLeft, new Vector3(0, 0, 0), Quaternion.identity);
+        bottomLeft.name = "bottomLeft";
+        bottomLeft.transform.parent = gameObject.transform;
+        bottomLeft.transform.localScale = new Vector3(1, -1, 1);
+
+        bottomRight = Instantiate(topLeft, new Vector3(27, 0, 0), Quaternion.identity);
+        bottomRight.name = "bottomRight";
+        bottomRight.transform.parent = gameObject.transform;
+        bottomRight.transform.localScale = new Vector3(-1, -1, 1);
 
         Instantiate(pacman[0], new Vector3(1, 9, -1), quaternion.identity);
         for (int i = 0; i < 3; i++)
         {
             Instantiate(pacman[1], new Vector3(i, -15, -1), quaternion.identity);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }
