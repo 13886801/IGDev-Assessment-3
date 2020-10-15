@@ -11,7 +11,7 @@ public class LevelGenerator : MonoBehaviour
     {
         GameObject topLeft = new GameObject();
 
-        topLeft.transform.parent = gameObject.transform;
+        topLeft.transform.SetParent(gameObject.transform);
         topLeft.name = "topLeft";
 
         LevelMap levelMap = new LevelMap();
@@ -32,7 +32,7 @@ public class LevelGenerator : MonoBehaviour
                     Tiles[tileID - 1],
                     new Vector3(x, 14 - y, 0),
                     Quaternion.Euler(new Vector3(0, 0, angle))
-                    ).transform.parent = topLeft.transform;
+                    ).transform.SetParent(topLeft.transform);
             }
         }
 
@@ -44,7 +44,7 @@ public class LevelGenerator : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             levelParts[i] = Instantiate(topLeft, positions[i], Quaternion.identity);
-            levelParts[i].transform.parent = gameObject.transform;
+            levelParts[i].transform.SetParent(gameObject.transform);
             levelParts[i].transform.localScale = scales[i];
             levelParts[i].name = names[i];
         }
@@ -55,7 +55,7 @@ public class LevelGenerator : MonoBehaviour
         lives.name = "Lives";
         for (int i = 0; i < 3; i++)
         {
-            Instantiate(pacman[1], new Vector3(i, -15, -1), quaternion.identity).transform.parent = lives.transform;
+            Instantiate(pacman[1], new Vector3(i, -15, -1), quaternion.identity).transform.SetParent(lives.transform);
         }
     }
 }
