@@ -4,9 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Border
-  - Canvas
-  - Particles
+  - Lv1Btn
+  - Lv2Btn
   layers:
   - Default
   - TransparentFX
