@@ -2,12 +2,18 @@
 
 public class TextFloat : MonoBehaviour
 {
-    public GameObject Text;
+    public GameObject text;
+    private Vector3 originalPos;
     private float angle;
+
+    void Start()
+    {
+        originalPos = text.transform.position;
+    }
 
     void Update()
     {
-        Text.transform.Translate(Vector3.up * (Mathf.Sin(angle) * 0.05f));
-        angle += 0.01f;
+        text.transform.position = new Vector3(originalPos.x, originalPos.y + (Mathf.Sin(angle) * 0.25f), originalPos.z);
+        angle += Time.deltaTime;
     }
 }
