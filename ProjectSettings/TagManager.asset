@@ -4,8 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Lv1Btn
-  - Lv2Btn
+  - Button
+  - Wall
+  - Enemy
+  - Points
+  - PowerUp
   layers:
   - Default
   - TransparentFX

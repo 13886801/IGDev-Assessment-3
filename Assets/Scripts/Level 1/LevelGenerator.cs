@@ -3,11 +3,19 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    public GameObject[] Tiles = new GameObject[7];
-    public GameObject[] pacman = new GameObject[2];
+    public GameObject[] tiles = new GameObject[7];
+    public GameObject[] pacStudent = new GameObject[2];
+    public GameObject jellyFish;
 
     // Start is called before the first frame update
     void Start()
+    {
+        loadLevel();
+        loadPacStudent();
+        loadJellyfish();
+    }
+
+    private void loadLevel()
     {
         GameObject topLeft = new GameObject();
 
@@ -29,14 +37,14 @@ public class LevelGenerator : MonoBehaviour
 
                 angle = levelMap.getAngle(y, x);
                 Instantiate(
-                    Tiles[tileID - 1],
+                    tiles[tileID - 1],
                     new Vector3(x, 14 - y, 0),
                     Quaternion.Euler(new Vector3(0, 0, angle))
                     ).transform.SetParent(topLeft.transform);
             }
         }
 
-        string[] names = { "topRight", "bottomLeft", "bottomRight"};
+        string[] names = { "topRight", "bottomLeft", "bottomRight" };
         Vector3[] positions = { new Vector3(27, 0, 0), new Vector3(0, 0, 0), new Vector3(27, 0, 0) };
         Vector3[] scales = { new Vector3(-1, 1, 1), new Vector3(1, -1, 1), new Vector3(-1, -1, 1) };
         GameObject[] levelParts = new GameObject[3];
@@ -47,15 +55,51 @@ public class LevelGenerator : MonoBehaviour
             levelParts[i].transform.SetParent(gameObject.transform);
             levelParts[i].transform.localScale = scales[i];
             levelParts[i].name = names[i];
+            if (i != 0)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    Transform destruct = levelParts[i].transform.GetChild(1 - j);
+                    destruct.gameObject.AddComponent<SelfDestruct>();
+                }
+            }
+
+            foreach (Transform childTile in levelParts[i].transform)
+            {
+                if (childTile.gameObject.tag != "Wall")
+                {
+                    childTile.localScale = childTile.parent.localScale;
+                }
+            }
         }
+    }
 
-        Instantiate(pacman[0], new Vector3(1, 9, -1), quaternion.identity);
+    private void loadPacStudent()
+    {
+        Instantiate(pacStudent[0], new Vector3(1, 9, -1), quaternion.identity);
+    }
 
-        GameObject lives = new GameObject();
-        lives.name = "Lives";
-        for (int i = 0; i < 3; i++)
+    private void loadJellyfish()
+    {
+        GameObject jellyfishes = new GameObject();
+        jellyfishes.name = "Jellyfishes";
+
+        Vector3[] positions = {
+            new Vector3(11.5f, 0, 0), new Vector3(12.5f, 0, 0),
+            new Vector3(14.5f, 0, 0), new Vector3(15.5f, 0, 0),
+        };
+
+        Color[] colours = {
+            new Color(1, 12f / 255, 0), new Color(1, 81f / 255, 1),
+            new Color(1, 1, 0), new Color(0, 1, 35f / 255)
+        };
+
+        GameObject colouredJellyfish;
+        for (int i = 0; i < 4; i++)
         {
-            Instantiate(pacman[1], new Vector3(i, -15, -1), quaternion.identity).transform.SetParent(lives.transform);
+            colouredJellyfish = Instantiate(jellyFish, positions[i], quaternion.identity);
+            colouredJellyfish.transform.SetParent(jellyfishes.transform);
+            colouredJellyfish.GetComponent<SpriteRenderer>().color = colours[i];
         }
     }
 }
