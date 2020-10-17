@@ -31,12 +31,7 @@ public class LevelManager : MonoBehaviour
                 break;
 
             case "QuitButton":
-                #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
-                #endif
-                #if UNITY_STANDALONE
-                    Application.Quit();
-                #endif
+                StartCoroutine("LoadingScreen", "StartScene");
                 break;
 
             default:
@@ -69,6 +64,10 @@ public class LevelManager : MonoBehaviour
     {
         switch(newSceneName)
         {
+            case "StartScene":
+                Destroy(gameObject);
+                break;
+
             case "PacStudent - Level 1":
                 AddButtonAction("QuitButton");
                 break;

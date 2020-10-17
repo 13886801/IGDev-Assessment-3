@@ -6,9 +6,11 @@ TagManager:
   tags:
   - Button
   - Wall
-  - Enemy
+  - TextManager
+  - UIText
   - Points
   - PowerUp
+  - PacStudent
   layers:
   - Default
   - TransparentFX

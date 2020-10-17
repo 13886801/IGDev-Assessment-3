@@ -1,5 +1,6 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelGenerator : MonoBehaviour
 {
@@ -76,7 +77,9 @@ public class LevelGenerator : MonoBehaviour
 
     private void loadPacStudent()
     {
-        Instantiate(pacStudent[0], new Vector3(1, 9, -1), quaternion.identity);
+        Instantiate(pacStudent[0], new Vector3(1, 13, -1), quaternion.identity)
+            .transform.eulerAngles = new Vector3(0f, 0f, 270f);
+        Instantiate(pacStudent[1], new Vector3(1, 13, -1), quaternion.identity);
     }
 
     private void loadJellyfish()
@@ -95,11 +98,18 @@ public class LevelGenerator : MonoBehaviour
         };
 
         GameObject colouredJellyfish;
+        string[] names = { "Red", "Pink", "Yellow", "Green" };
+        Transform canvas;
         for (int i = 0; i < 4; i++)
         {
             colouredJellyfish = Instantiate(jellyFish, positions[i], quaternion.identity);
             colouredJellyfish.transform.SetParent(jellyfishes.transform);
             colouredJellyfish.GetComponent<SpriteRenderer>().color = colours[i];
+            colouredJellyfish.name = names[i];
+
+            canvas = colouredJellyfish.transform.GetChild(1);
+            canvas.name = "Ghost" + (i + 1) + "Canvas";
+            canvas.transform.GetChild(0).GetComponent<Text>().text = "" + (i + 1);
         }
     }
 }
