@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 401824101}
   m_Layer: 5
   m_Name: HUD
-  m_TagString: Untagged
+  m_TagString: CanvasHUD
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -311,7 +311,7 @@ PrefabInstance:
     - target: {fileID: 6816949804346802028, guid: 95963bbb1827be948b027ff16338d490,
         type: 3}
       propertyPath: m_Text
-      value: Back To Main Menu
+      value: <- Main Menu
       objectReference: {fileID: 0}
     - target: {fileID: 7752645990387590655, guid: 95963bbb1827be948b027ff16338d490,
         type: 3}
@@ -381,7 +381,7 @@ PrefabInstance:
     - target: {fileID: 7752645990387590655, guid: 95963bbb1827be948b027ff16338d490,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 150
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7752645990387590655, guid: 95963bbb1827be948b027ff16338d490,
         type: 3}
@@ -618,7 +618,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 225, y: 60}
-  m_SizeDelta: {x: 85, y: 50}
+  m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &869606766
 MonoBehaviour:
@@ -1136,6 +1136,8 @@ MonoBehaviour:
   - {fileID: 4764802105984795660, guid: d18a3573721cbc74daffee2b53311635, type: 3}
   jellyFish: {fileID: 1114393534534851373, guid: fd44732b5f615f94c9f7ccdc49759e1a,
     type: 3}
+  Gem: {fileID: 472286908311927331, guid: 30f252dae71d338479dc01533ee47213, type: 3}
+  HUD: {fileID: 401824103}
 --- !u!4 &1800141086
 Transform:
   m_ObjectHideFlags: 0

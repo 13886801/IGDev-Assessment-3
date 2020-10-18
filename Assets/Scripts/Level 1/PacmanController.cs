@@ -6,10 +6,14 @@ public class PacmanController : MonoBehaviour
     private string lastInput = "";
     private string currentInput = "";
     private Tween tween;
+
     private PacStudentSensor fishSenses;
+    private Animator pacAnim;
+    private AudioSource pacAudioSource;
+    public AudioClip pop;
+    public AudioClip wallBump;
 
     private TextDisplay score;
-    private AudioSource bubblePop;
 
     private string[] directions = { "Up", "Left", "Down", "Right" };
     private KeyCode[] movement = new KeyCode[] {
@@ -25,9 +29,12 @@ public class PacmanController : MonoBehaviour
     void Start()
     {
         score = GameObject.FindGameObjectWithTag("TextManager").GetComponent<TextDisplay>();
-        bubblePop = gameObject.GetComponentInChildren<AudioSource>();
 
         fishSenses = GameObject.FindGameObjectWithTag("Sensor").GetComponent<PacStudentSensor>();
+        pacAnim = gameObject.GetComponent<Animator>();
+        pacAnim.speed = 0;
+
+        pacAudioSource = gameObject.GetComponent<AudioSource>();
 
         tween = new Tween();
         prevPos = gameObject.transform.position;
@@ -52,12 +59,7 @@ public class PacmanController : MonoBehaviour
     }
     private void changeDirection()
     {
-        if (tween.hasTween || lastInput.Equals(currentInput))
-        {
-            return;
-        }
-
-        if (fishSenses.IsThereAWall(lastInput))
+        if (tween.hasTween || lastInput.Equals(currentInput) || fishSenses.IsThereAWall(lastInput))
         {
             return;
         }
@@ -72,26 +74,6 @@ public class PacmanController : MonoBehaviour
             }
         }
     }
-
-    private bool OppositeDirection()
-    {
-        switch(lastInput)
-        {
-            case "Up":
-                return gameObject.transform.rotation.z > 90f;
-
-            case "Left":
-                return gameObject.transform.rotation.z < 0f;
-
-            case "Down":
-                return gameObject.transform.rotation.z < 90f;
-
-            case "Right":
-                return gameObject.transform.rotation.z > 0f;
-        }
-        return false;
-    }
-
     private void updatePosition()
     {
         if (tween.hasTween)
@@ -99,11 +81,11 @@ public class PacmanController : MonoBehaviour
             gameObject.transform.position = tween.calculatePosition(Time.deltaTime);
         } else
         {
-            if (gameObject.transform.position.x < 0)
+            if (gameObject.transform.position.x < 1)
             {
                 gameObject.transform.position = new Vector3(26f, 0f, -1);
             }
-            else if (gameObject.transform.position.x > 27)
+            else if (gameObject.transform.position.x > 26)
             {
                 gameObject.transform.position = new Vector3(1f, 0f, -1);
             }
@@ -128,12 +110,19 @@ public class PacmanController : MonoBehaviour
                     break;
 
                 default:
-                    break;
+                    pacAudioSource.Pause();
+                    pacAnim.speed = 0;
+                    return;
+            }
+            if (!pacAudioSource.isPlaying)
+            {
+                pacAudioSource.Play();
+                pacAnim.speed = 1;
             }
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collider)
+    void OnCollisionStay2D(Collision2D collider)
     {
         if (score == null)
         {
@@ -143,13 +132,15 @@ public class PacmanController : MonoBehaviour
         switch(collider.gameObject.tag)
         {
             case "Wall":
+                pacAudioSource.PlayOneShot(wallBump);
                 gameObject.transform.position = prevPos;
                 currentInput = "";
+                lastInput = "";
                 tween.stopTween();
                 break;
 
             case "Points":
-                bubblePop.Play();
+                pacAudioSource.PlayOneShot(pop);
                 score.IncreaseScore(10);
                 collider.gameObject.SetActive(false);
                 break;

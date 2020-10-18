@@ -11,6 +11,8 @@ TagManager:
   - Points
   - PowerUp
   - PacStudent
+  - Sensor
+  - CanvasHUD
   layers:
   - Default
   - TransparentFX

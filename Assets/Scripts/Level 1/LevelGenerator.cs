@@ -7,6 +7,11 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] tiles = new GameObject[7];
     public GameObject[] pacStudent = new GameObject[2];
     public GameObject jellyFish;
+    public GameObject Gem;
+    public Canvas HUD;
+
+    public System.Random RNG = new System.Random();
+    private float timer;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +24,6 @@ public class LevelGenerator : MonoBehaviour
     private void loadLevel()
     {
         GameObject topLeft = new GameObject();
-
         topLeft.transform.SetParent(gameObject.transform);
         topLeft.name = "topLeft";
 
@@ -40,8 +44,8 @@ public class LevelGenerator : MonoBehaviour
                 Instantiate(
                     tiles[tileID - 1],
                     new Vector3(x, 14 - y, 0),
-                    Quaternion.Euler(new Vector3(0, 0, angle))
-                    ).transform.SetParent(topLeft.transform);
+                    Quaternion.Euler(new Vector3(0, 0, angle)),
+                    topLeft.transform);
             }
         }
 
@@ -52,8 +56,7 @@ public class LevelGenerator : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            levelParts[i] = Instantiate(topLeft, positions[i], Quaternion.identity);
-            levelParts[i].transform.SetParent(gameObject.transform);
+            levelParts[i] = Instantiate(topLeft, positions[i], Quaternion.identity, gameObject.transform);
             levelParts[i].transform.localScale = scales[i];
             levelParts[i].name = names[i];
             if (i != 0)
@@ -77,9 +80,15 @@ public class LevelGenerator : MonoBehaviour
 
     private void loadPacStudent()
     {
-        Instantiate(pacStudent[0], new Vector3(1, 13, -1), quaternion.identity)
-            .transform.eulerAngles = new Vector3(0f, 0f, 270f);
-        Instantiate(pacStudent[1], new Vector3(1, 13, -1), quaternion.identity);
+        GameObject pacStudentContainer= new GameObject();
+        pacStudentContainer.name = "pacStudent";
+
+        Instantiate(pacStudent[0], new Vector3(1, 13, -1),
+            Quaternion.Euler(new Vector3(0f, 0f, 270f)),
+            pacStudentContainer.transform).name = "pacBody";
+
+        Instantiate(pacStudent[1], new Vector3(1, 13, -1), quaternion.identity,
+            pacStudentContainer.transform).name = "pacSensor";
     }
 
     private void loadJellyfish()
@@ -102,14 +111,30 @@ public class LevelGenerator : MonoBehaviour
         Transform canvas;
         for (int i = 0; i < 4; i++)
         {
-            colouredJellyfish = Instantiate(jellyFish, positions[i], quaternion.identity);
-            colouredJellyfish.transform.SetParent(jellyfishes.transform);
+            colouredJellyfish = Instantiate(jellyFish, positions[i],
+                quaternion.identity, jellyfishes.transform);
+
             colouredJellyfish.GetComponent<SpriteRenderer>().color = colours[i];
             colouredJellyfish.name = names[i];
 
             canvas = colouredJellyfish.transform.GetChild(1);
             canvas.name = "Ghost" + (i + 1) + "Canvas";
             canvas.transform.GetChild(0).GetComponent<Text>().text = "" + (i + 1);
+        }
+    }
+
+    void Update()
+    {
+        SpawnGem();
+        timer += Time.deltaTime;
+    }
+
+    private void SpawnGem()
+    {
+        if ((int)timer % 30 == 29)
+        {
+            Instantiate(Gem, HUD.transform);
+            timer = 0;
         }
     }
 }
