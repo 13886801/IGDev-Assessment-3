@@ -9,7 +9,7 @@ public class Tween
     private float tick;
     public bool hasTween { get; private set; } = false;
 
-    public void setTweenValue(Vector3 startingPos, Vector3 destination, float duration)
+    public void setTweenValues(Vector3 startingPos, Vector3 destination, float duration)
     {
         startpos = startingPos;
         endPos = destination;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PacmanController : MonoBehaviour
+public class PacStudentController : MonoBehaviour
 {
     private Vector3 prevPos;
     private string lastInput = "";
@@ -89,33 +89,41 @@ public class PacmanController : MonoBehaviour
             {
                 gameObject.transform.position = new Vector3(1f, 0f, -1);
             }
+
             prevPos = gameObject.transform.position;
 
             switch (currentInput)
             {
                 case "Up":
-                    tween.setTweenValue(prevPos, new Vector2(prevPos.x, prevPos.y + 1), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y + 1), 0.25f);
                     break;
 
                 case "Left":
-                    tween.setTweenValue(prevPos, new Vector2(prevPos.x - 1, prevPos.y), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector2(prevPos.x - 1, prevPos.y), 0.25f);
                     break;
 
                 case "Down":
-                    tween.setTweenValue(prevPos, new Vector2(prevPos.x, prevPos.y - 1), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y - 1), 0.25f);
                     break;
 
                 case "Right":
-                    tween.setTweenValue(prevPos, new Vector2(prevPos.x + 1, prevPos.y), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector2(prevPos.x + 1, prevPos.y), 0.25f);
                     break;
 
                 default:
-                    pacAudioSource.Pause();
+                    if (currentInput.Equals("WallBump"))
+                    {
+                        pacAudioSource.PlayOneShot(wallBump);
+                        currentInput = "";
+                        lastInput = "";
+                    }
+                    pacAudioSource.loop = false;
                     pacAnim.speed = 0;
                     return;
             }
             if (!pacAudioSource.isPlaying)
             {
+                pacAudioSource.loop = true;
                 pacAudioSource.Play();
                 pacAnim.speed = 1;
             }
@@ -132,16 +140,20 @@ public class PacmanController : MonoBehaviour
         switch(collider.gameObject.tag)
         {
             case "Wall":
-                pacAudioSource.PlayOneShot(wallBump);
                 gameObject.transform.position = prevPos;
-                currentInput = "";
-                lastInput = "";
+                currentInput = "WallBump";
+                lastInput = "WallBump";
                 tween.stopTween();
                 break;
 
             case "Points":
                 pacAudioSource.PlayOneShot(pop);
                 score.IncreaseScore(10);
+                collider.gameObject.SetActive(false);
+                break;
+
+            case "BigPoints":
+                score.IncreaseScore(100);
                 collider.gameObject.SetActive(false);
                 break;
 

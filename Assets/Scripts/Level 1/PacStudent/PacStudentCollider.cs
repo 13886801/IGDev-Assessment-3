@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class OtherCollider : MonoBehaviour
+public class PacStudentCollider : MonoBehaviour
 {
     private bool col = false;
 

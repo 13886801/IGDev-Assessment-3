@@ -3,7 +3,7 @@
 public class PacStudentSensor : MonoBehaviour
 {
     private GameObject pacStudent;
-    private OtherCollider[] sensors = new OtherCollider[4];
+    private PacStudentCollider[] sensors = new PacStudentCollider[4];
 
     void Start()
     {
@@ -11,7 +11,7 @@ public class PacStudentSensor : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
-            sensors[i] = gameObject.transform.GetChild(i).GetComponent<OtherCollider>();
+            sensors[i] = gameObject.transform.GetChild(i).GetComponent<PacStudentCollider>();
         }
     }
 
