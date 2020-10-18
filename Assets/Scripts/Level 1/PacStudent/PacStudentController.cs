@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class PacStudentController : MonoBehaviour
 {
@@ -6,14 +7,19 @@ public class PacStudentController : MonoBehaviour
     private string lastInput = "";
     private string currentInput = "";
     private Tween tween;
+    private TextDisplay score;
 
     private PacStudentSensor fishSenses;
+    private BoxCollider2D hitbox;
+    private SpriteRenderer frameRenderer;
+
+    private ParticleSystem.EmissionModule[] particles = new ParticleSystem.EmissionModule[3];
+
     private Animator pacAnim;
     private AudioSource pacAudioSource;
     public AudioClip pop;
     public AudioClip wallBump;
 
-    private TextDisplay score;
 
     private string[] directions = { "Up", "Left", "Down", "Right" };
     private KeyCode[] movement = new KeyCode[] {
@@ -28,20 +34,36 @@ public class PacStudentController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        prevPos = gameObject.transform.position;
+        tween = new Tween();
+
         score = GameObject.FindGameObjectWithTag("TextManager").GetComponent<TextDisplay>();
 
         fishSenses = GameObject.FindGameObjectWithTag("Sensor").GetComponent<PacStudentSensor>();
+        hitbox = gameObject.GetComponent<BoxCollider2D>();
+        frameRenderer = gameObject.GetComponent<SpriteRenderer>();
+
+        for (int i = 0; i < 3; i++)
+        {
+            particles[i] = gameObject.transform.GetChild(i).GetComponent<ParticleSystem>().emission;
+            if (i != 2)
+            {
+                particles[i].enabled = false;
+            }
+        }
+
         pacAnim = gameObject.GetComponent<Animator>();
-        pacAnim.speed = 0;
 
         pacAudioSource = gameObject.GetComponent<AudioSource>();
-
-        tween = new Tween();
-        prevPos = gameObject.transform.position;
     }
 
     void Update()
     {
+        if (!hitbox.enabled)
+        {
+            return;
+        }
+
         getInput();
         changeDirection();
         updatePosition();
@@ -89,7 +111,7 @@ public class PacStudentController : MonoBehaviour
             {
                 gameObject.transform.position = new Vector3(1f, 0f, -1);
             }
-
+            
             prevPos = gameObject.transform.position;
 
             switch (currentInput)
@@ -117,7 +139,6 @@ public class PacStudentController : MonoBehaviour
                         currentInput = "";
                         lastInput = "";
                     }
-                    pacAudioSource.loop = false;
                     pacAnim.speed = 0;
                     return;
             }
@@ -140,30 +161,92 @@ public class PacStudentController : MonoBehaviour
         switch(collider.gameObject.tag)
         {
             case "Wall":
-                gameObject.transform.position = prevPos;
-                currentInput = "WallBump";
-                lastInput = "WallBump";
-                tween.stopTween();
+                StartCoroutine("Bleed", 2);
+                Stop("WallBump");
                 break;
 
             case "Points":
-                pacAudioSource.PlayOneShot(pop);
-                score.IncreaseScore(10);
-                collider.gameObject.SetActive(false);
-                break;
+                switch(collider.gameObject.name)
+                {
+                    case "Gem":
+                        score.IncreaseScore(100);
+                        break;
 
-            case "BigPoints":
-                score.IncreaseScore(100);
-                collider.gameObject.SetActive(false);
+                    default:
+                        score.IncreaseScore(10);
+                        pacAudioSource.PlayOneShot(pop);
+                        break;
+                }
+                Destroy(collider.gameObject);
                 break;
 
             case "PowerUp":
                 score.IncreaseScore(50);
-                collider.gameObject.SetActive(false);
+                Destroy(collider.gameObject);
+                break;
+
+            case "Enemy":
+                Stop("");
+                StartCoroutine("Death");
                 break;
 
             default:
-                break;
+                Debug.Log("Unknown Tag");
+                return;
         }
+    }
+    private void Stop(string soundEffect)
+    {
+        gameObject.transform.position = prevPos;
+        currentInput = soundEffect;
+        lastInput = soundEffect;
+        tween.stopTween();
+        pacAudioSource.loop = false;
+    }
+
+    private IEnumerator Bleed(float seconds)
+    {
+        float sec = seconds;
+        particles[0].enabled = true;
+        while (sec > 0f)
+        {
+            sec -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        particles[0].enabled = false;
+    }
+
+    private IEnumerator Death()
+    {
+        float time = 2f;
+        hitbox.enabled = false;
+        particles[1].enabled = true;
+        particles[2].enabled = false;
+
+        pacAnim.SetBool("Dead", true);
+
+        while (time > 0f)
+        {
+            time -= Time.deltaTime;
+            yield return null;
+        }
+
+        frameRenderer.enabled = false;
+        particles[1].enabled = false;
+        yield return null;
+
+        while (time < 1f)
+        {
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        pacAnim.SetBool("Dead", false);
+        gameObject.transform.position = new Vector2(1f, 13f);
+        gameObject.transform.eulerAngles = new Vector3(0f, 0f, -90f);
+
+        particles[2].enabled = true;
+        hitbox.enabled = true;
+        frameRenderer.enabled = true;
     }
 }

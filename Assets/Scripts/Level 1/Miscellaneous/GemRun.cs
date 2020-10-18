@@ -1,5 +1,4 @@
-﻿using System.IO.Pipes;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GemRun : MonoBehaviour
 {
@@ -8,7 +7,6 @@ public class GemRun : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RectTransform rect = gameObject.GetComponent<RectTransform>();
         Vector2 pos1 = gameObject.transform.position;
         float h = Camera.main.orthographicSize * 2f;
         float w = h * Screen.width / Screen.height;
@@ -21,7 +19,7 @@ public class GemRun : MonoBehaviour
         gameObject.transform.position = Run.calculatePosition(Time.deltaTime);
         if (gameObject.transform.position == Run.endPos)
         {
-            gameObject.AddComponent<SelfDestruct>();
+            Destroy(gameObject);
         }
     }
 }

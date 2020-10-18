@@ -63,8 +63,7 @@ public class LevelGenerator : MonoBehaviour
             {
                 for (int j = 0; j < 2; j++)
                 {
-                    Transform destruct = levelParts[i].transform.GetChild(1 - j);
-                    destruct.gameObject.AddComponent<SelfDestruct>();
+                    Destroy(levelParts[i].transform.GetChild(1 - j).gameObject);
                 }
             }
 
@@ -133,7 +132,7 @@ public class LevelGenerator : MonoBehaviour
     {
         if ((int)timer % 30 == 29)
         {
-            Instantiate(Gem, HUD.transform);
+            Instantiate(Gem, HUD.transform).name = "Gem";
             timer = 0;
         }
     }
