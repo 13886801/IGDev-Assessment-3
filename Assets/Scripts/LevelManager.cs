@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour
             onClick.AddListener(delegate { ButtonActions(buttonName); });
     }
 
-    private void ButtonActions(string buttonNames)
+    public void ButtonActions(string buttonNames)
     {
         switch(buttonNames)
         {

@@ -7,7 +7,7 @@ public class PacStudentController : MonoBehaviour
     private string lastInput = "";
     private string currentInput = "";
     private Tween tween;
-    private TextDisplay score;
+    private TextDisplay GUIText;
 
     private PacStudentSensor fishSenses;
     private BoxCollider2D hitbox;
@@ -37,22 +37,23 @@ public class PacStudentController : MonoBehaviour
         prevPos = gameObject.transform.position;
         tween = new Tween();
 
-        score = GameObject.FindGameObjectWithTag("TextManager").GetComponent<TextDisplay>();
+        GUIText = GameObject.FindGameObjectWithTag("TextManager").GetComponent<TextDisplay>();
+        GUIText.GetPacStudentController(this);
 
         fishSenses = GameObject.FindGameObjectWithTag("Sensor").GetComponent<PacStudentSensor>();
         hitbox = gameObject.GetComponent<BoxCollider2D>();
+        SetHitBox(false);
+
         frameRenderer = gameObject.GetComponent<SpriteRenderer>();
 
         for (int i = 0; i < 3; i++)
         {
             particles[i] = gameObject.transform.GetChild(i).GetComponent<ParticleSystem>().emission;
-            if (i != 2)
-            {
-                particles[i].enabled = false;
-            }
+            particles[i].enabled = false;
         }
 
         pacAnim = gameObject.GetComponent<Animator>();
+        pacAnim.speed = 0;
 
         pacAudioSource = gameObject.GetComponent<AudioSource>();
     }
@@ -144,6 +145,7 @@ public class PacStudentController : MonoBehaviour
             }
             if (!pacAudioSource.isPlaying)
             {
+                particles[2].enabled = true;
                 pacAudioSource.loop = true;
                 pacAudioSource.Play();
                 pacAnim.speed = 1;
@@ -153,7 +155,7 @@ public class PacStudentController : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collider)
     {
-        if (score == null)
+        if (GUIText == null)
         {
             return;
         }
@@ -161,7 +163,10 @@ public class PacStudentController : MonoBehaviour
         switch(collider.gameObject.tag)
         {
             case "Wall":
-                StartCoroutine("Bleed", 2);
+                if (!particles[0].enabled)
+                {
+                    StartCoroutine("Bleed", 2);
+                }
                 Stop("WallBump");
                 break;
 
@@ -169,11 +174,11 @@ public class PacStudentController : MonoBehaviour
                 switch(collider.gameObject.name)
                 {
                     case "Gem":
-                        score.IncreaseScore(100);
+                        GUIText.IncreaseScore(100);
                         break;
 
                     default:
-                        score.IncreaseScore(10);
+                        GUIText.IncreaseScore(10);
                         pacAudioSource.PlayOneShot(pop);
                         break;
                 }
@@ -181,22 +186,31 @@ public class PacStudentController : MonoBehaviour
                 break;
 
             case "PowerUp":
-                score.IncreaseScore(50);
+                GUIText.IncreaseScore(50);
+                GUIText.PowerTimer();
                 Destroy(collider.gameObject);
                 break;
 
-            case "Enemy":
+            case "Predator":
                 Stop("");
                 StartCoroutine("Death");
                 break;
 
-            default:
-                Debug.Log("Unknown Tag");
-                return;
+            case "Prey":
+                GUIText.IncreaseScore(300);
+                //Add more things here.
+                break;
         }
     }
+
+    public void SetHitBox(bool boolean)
+    {
+        hitbox.enabled = boolean;
+    }
+
     private void Stop(string soundEffect)
     {
+        particles[2].enabled = false;
         gameObject.transform.position = prevPos;
         currentInput = soundEffect;
         lastInput = soundEffect;
@@ -219,7 +233,7 @@ public class PacStudentController : MonoBehaviour
     private IEnumerator Death()
     {
         float time = 2f;
-        hitbox.enabled = false;
+        SetHitBox(false);
         particles[1].enabled = true;
         particles[2].enabled = false;
 
@@ -241,12 +255,12 @@ public class PacStudentController : MonoBehaviour
             yield return null;
         }
 
+        GUIText.DecrementLife();
         pacAnim.SetBool("Dead", false);
         gameObject.transform.position = new Vector2(1f, 13f);
         gameObject.transform.eulerAngles = new Vector3(0f, 0f, -90f);
 
-        particles[2].enabled = true;
-        hitbox.enabled = true;
+        SetHitBox(true);
         frameRenderer.enabled = true;
     }
 }

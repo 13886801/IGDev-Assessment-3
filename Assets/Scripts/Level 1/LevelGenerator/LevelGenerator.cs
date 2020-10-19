@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class LevelGenerator : MonoBehaviour
 {
+    public TextDisplay textDisplay;
+
     public GameObject[] tiles = new GameObject[7];
     public GameObject[] pacStudent = new GameObject[2];
     public GameObject jellyFish;
@@ -49,7 +51,7 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        string[] names = { "topRight", "bottomLeft", "bottomRight" };
+        string[] names = { "topRight", "bottomLeft", "bottomRight"};
         Vector3[] positions = { new Vector3(27, 0, 0), new Vector3(0, 0, 0), new Vector3(27, 0, 0) };
         Vector3[] scales = { new Vector3(-1, 1, 1), new Vector3(1, -1, 1), new Vector3(-1, -1, 1) };
         GameObject[] levelParts = new GameObject[3];
@@ -75,6 +77,26 @@ public class LevelGenerator : MonoBehaviour
                 }
             }
         }
+
+        GameObject points = new GameObject();
+        points.name = "points";
+        points.transform.SetParent(gameObject.transform);
+        Transform part;
+        Transform tile;
+
+        for (int i = 0; i < 4; i++)
+        {
+            part = gameObject.transform.GetChild(i);
+            for (int j = 0; j < part.childCount; j++)
+            {
+                tile = part.GetChild(j);
+                if (tile.CompareTag("Points") || tile.CompareTag("PowerUp"))
+                {
+                    tile.SetParent(points.transform);
+                }
+            }
+        }
+        textDisplay.BubbleCount(points);
     }
 
     private void loadPacStudent()
@@ -96,8 +118,8 @@ public class LevelGenerator : MonoBehaviour
         jellyfishes.name = "Jellyfishes";
 
         Vector3[] positions = {
-            new Vector3(11.5f, 0, 0), new Vector3(12.5f, 0, 0),
-            new Vector3(14.5f, 0, 0), new Vector3(15.5f, 0, 0),
+            new Vector3(11f, 0, 0), new Vector3(12f, 0, 0),
+            new Vector3(15f, 0, 0), new Vector3(16f, 0, 0),
         };
 
         Color[] colours = {
@@ -124,13 +146,16 @@ public class LevelGenerator : MonoBehaviour
 
     void Update()
     {
-        SpawnGem();
-        timer += Time.deltaTime;
+        if (textDisplay.GetPowerTime() != -1)
+        { 
+            SpawnGem();
+            timer += Time.deltaTime;
+        }
     }
 
     private void SpawnGem()
     {
-        if ((int)timer % 30 == 29)
+        if ((int)timer % 30 == 0 && (int)timer != 0)
         {
             Instantiate(Gem, HUD.transform).name = "Gem";
             timer = 0;

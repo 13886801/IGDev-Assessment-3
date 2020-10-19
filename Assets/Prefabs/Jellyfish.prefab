@@ -112,9 +112,11 @@ GameObject:
   - component: {fileID: 7886290931985072816}
   - component: {fileID: 8624425028373375364}
   - component: {fileID: -4580387493980738981}
+  - component: {fileID: -9219948836914559681}
+  - component: {fileID: -2848406385070100321}
   m_Layer: 0
   m_Name: Jellyfish
-  m_TagString: Enemy
+  m_TagString: Predator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -252,6 +254,30 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.6349659, y: 0.9652623}
   m_EdgeRadius: 0
+--- !u!114 &-9219948836914559681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114393534534851373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f040ccba7102676419e089ac344857f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2848406385070100321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114393534534851373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d135f930b8fe0446a2999a34b920424, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2183993136479508537
 GameObject:
   m_ObjectHideFlags: 0
