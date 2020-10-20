@@ -130,7 +130,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject colouredJellyfish;
         string[] names = { "Red", "Pink", "Yellow", "Green" };
         Transform canvas;
-        for (int i = 0; i < 4; i++)
+        for (int i = 1; i < 2; i++)
         {
             colouredJellyfish = Instantiate(jellyFish, positions[i],
                 quaternion.identity, jellyfishes.transform);

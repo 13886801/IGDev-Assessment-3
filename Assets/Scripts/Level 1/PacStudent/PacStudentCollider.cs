@@ -16,11 +16,6 @@ public class PacStudentCollider : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Wall")
-        {
-            col = true;
-            return;
-        }
-        col = false;
+        col = collision.gameObject.tag == "Wall";
     }
 }

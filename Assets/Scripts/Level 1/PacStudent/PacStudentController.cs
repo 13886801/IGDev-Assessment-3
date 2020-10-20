@@ -79,6 +79,10 @@ public class PacStudentController : MonoBehaviour
                 lastInput = directions[i];
             }
         }
+        if (Input.GetKeyDown("q"))
+        {
+            hitbox.enabled = false;
+        }
     }
     private void changeDirection()
     {
@@ -102,54 +106,55 @@ public class PacStudentController : MonoBehaviour
         if (tween.hasTween)
         {
             gameObject.transform.position = tween.calculatePosition(Time.deltaTime);
-        } else
+            return;
+        }
+
+        if (gameObject.transform.position.x < 1)
         {
-            if (gameObject.transform.position.x < 1)
-            {
-                gameObject.transform.position = new Vector3(26f, 0f, -1);
-            }
-            else if (gameObject.transform.position.x > 26)
-            {
-                gameObject.transform.position = new Vector3(1f, 0f, -1);
-            }
+            gameObject.transform.position = new Vector3(26f, 0f, -1);
+        }
+        else if (gameObject.transform.position.x > 26)
+        {
+            gameObject.transform.position = new Vector3(1f, 0f, -1);
+        }
             
-            prevPos = gameObject.transform.position;
+        prevPos = gameObject.transform.position;
 
-            switch (currentInput)
-            {
-                case "Up":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y + 1), 0.25f);
-                    break;
+        switch (currentInput)
+        {
+            case "Up":
+                tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y + 1), 0.25f);
+                break;
 
-                case "Left":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x - 1, prevPos.y), 0.25f);
-                    break;
+            case "Left":
+                tween.setTweenValues(prevPos, new Vector2(prevPos.x - 1, prevPos.y), 0.25f);
+                break;
 
-                case "Down":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y - 1), 0.25f);
-                    break;
+            case "Down":
+                tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y - 1), 0.25f);
+                break;
 
-                case "Right":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x + 1, prevPos.y), 0.25f);
-                    break;
+            case "Right":
+                tween.setTweenValues(prevPos, new Vector2(prevPos.x + 1, prevPos.y), 0.25f);
+                break;
 
-                default:
-                    if (currentInput.Equals("WallBump"))
-                    {
-                        pacAudioSource.PlayOneShot(wallBump);
-                        currentInput = "";
-                        lastInput = "";
-                    }
-                    pacAnim.speed = 0;
-                    return;
-            }
-            if (!pacAudioSource.isPlaying)
-            {
-                particles[2].enabled = true;
-                pacAudioSource.loop = true;
-                pacAudioSource.Play();
-                pacAnim.speed = 1;
-            }
+            default:
+                if (currentInput.Equals("WallBump"))
+                {
+                    pacAudioSource.PlayOneShot(wallBump);
+                    currentInput = "";
+                    lastInput = "";
+                }
+                pacAnim.speed = 0;
+                return;
+        }
+
+        if (!pacAudioSource.isPlaying)
+        {
+            particles[2].enabled = true;
+            pacAudioSource.loop = true;
+            pacAudioSource.Play();
+            pacAnim.speed = 1;
         }
     }
 
