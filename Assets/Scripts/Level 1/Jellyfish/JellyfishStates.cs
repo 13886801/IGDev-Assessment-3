@@ -30,8 +30,6 @@ public class JellyfishStates : MonoBehaviour
         if (collision.gameObject.CompareTag("PacStudent") && gameObject.CompareTag("Prey"))
         {
             hitbox.enabled = false;
-            anim.SetBool("Scared?", false);
-            anim.SetBool("Recovering?", false);
             anim.SetBool("Dead?", true);
             StartCoroutine("Respawn");
         }
@@ -39,15 +37,14 @@ public class JellyfishStates : MonoBehaviour
 
     private IEnumerator Respawn()
     {
-        float time = 0;
         textDisplay.ChangeJellyfishCount(-1);
-        while (time < 5f)
+
+        while (anim.GetBool("Dead?"))
         {
-            time += Time.deltaTime;
             yield return null;
         }
+
         textDisplay.ChangeJellyfishCount(1);
-        anim.SetBool("Dead?", false);
         hitbox.enabled = true;
     }
 }

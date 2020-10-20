@@ -4,6 +4,7 @@ public class JellyfishSensor : MonoBehaviour
 {
     private bool isColliding = false;
     private Transform pacStudent;
+    private int collisionCount;
     private Vector2 pos;
 
     void Start()
@@ -15,7 +16,7 @@ public class JellyfishSensor : MonoBehaviour
     {
         pos = gameObject.transform.position;
         if (pos.x > 27 || pos.x < 1 ||
-            (13 <= pos.x && pos.x <= 14 && -2 <= pos.y && pos.y <= 2))
+            (12 <= pos.x && pos.x <= 15 && -2.5f <= pos.y && pos.y <= 2))
         {
             return true;
         }
@@ -27,18 +28,29 @@ public class JellyfishSensor : MonoBehaviour
         return (int)Vector2.Distance(gameObject.transform.position, pacStudent.position);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    public int CalculateDistance(Vector2 position)
     {
-        isColliding = collision.transform.CompareTag("Wall");
+        return (int)Vector2.Distance(gameObject.transform.position, position);
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+    void Update()
     {
-        isColliding = collision.transform.CompareTag("Wall");
+        isColliding = collisionCount > 0;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Wall")
+        {
+            collisionCount++;
+        }
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        isColliding = false;
+        if (collision.transform.tag == "Wall")
+        {
+            collisionCount--;
+        }
     }
 }

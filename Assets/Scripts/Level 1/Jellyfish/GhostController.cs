@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class GhostController : MonoBehaviour
 {
@@ -9,11 +11,16 @@ public class GhostController : MonoBehaviour
 
     private int previousSpot = -1;
     private int currentMovementIndex = -1;
+
     private Vector2 prevPos;
-    private Vector2 Destination;
+    private Vector2 spawnPoint;
+    private Vector2 destination;
+    private Vector2[] corners;
 
     private bool[] validMovement = new bool[4];
     private int[] sensorDistance = new int[4];
+
+    private int borderPos;
 
     void Start()
     {
@@ -21,9 +28,28 @@ public class GhostController : MonoBehaviour
         anim = gameObject.GetComponent<Animator>();
         textDisplay = GameObject.FindGameObjectWithTag("TextManager").GetComponent<TextDisplay>();
 
-        int[] randX = { 13, 14 };
-        int[] randY = { -3, 3 };
-        Destination = new Vector2(randX[Random.Range(0, 2)], randY[Random.Range(0, 2)]);
+        spawnPoint = gameObject.transform.position;
+        RandomisedSpawn();
+
+        corners = new Vector2[] {
+            new Vector2(1, 13), //Top Left
+            new Vector2(12, 13), //Top Middle Left
+            new Vector2(15, 13), //Top Middle Right
+            new Vector2(26, 13), //Top Right
+
+            new Vector2(26, 6), //Top Right Bottom
+            new Vector2(25, 0), //Middle Right
+            new Vector2(26, -6), //Bottom Right Top
+
+            new Vector2(26, -13), //Bottom Right
+            new Vector2(15, -13), //Bottom Middle Right
+            new Vector2(12, -13), //Bottom Middle Left
+            new Vector2(1, -13), //Bottom Left
+
+            new Vector2(1, -6), //Bottom Left Top
+            new Vector2(2, 0), //Middle Left
+            new Vector2(1, 6) //Middle Left
+        };
     }
 
     void Update()
@@ -39,27 +65,27 @@ public class GhostController : MonoBehaviour
 
     private void ChooseDirection()
     {
-        if (tween.hasTween)
+        if (tween.hasTween || anim.GetBool("Dead?"))
         {
             return;
         }
 
-        if (Destination != Vector2.zero)
+        if (destination != Vector2.zero)
         {
             Vector2 pos = gameObject.transform.position;
-            if (pos.x != Destination.x)
+            if (pos.x != destination.x)
             {
-                currentMovementIndex = (pos.x < Destination.x) ? 3 : 1;
+                currentMovementIndex = (pos.x < destination.x) ? 3 : 1;
                 previousSpot = (currentMovementIndex + 2) % 4;
                 return;
             }
-            else if (gameObject.transform.position.y != Destination.y)
+            else if (gameObject.transform.position.y != destination.y)
             {
-                currentMovementIndex = (pos.y < Destination.y) ? 0 : 2;
+                currentMovementIndex = (pos.y < destination.y) ? 0 : 2;
                 previousSpot = (currentMovementIndex + 2) % 4;
                 return;
             }
-            Destination = Vector2.zero;
+            destination = Vector2.zero;
         }
 
         for (int i = 0; i < 4; i++)
@@ -70,6 +96,14 @@ public class GhostController : MonoBehaviour
 
         if (OppositeDirectionCheck())
         {
+            return;
+        }
+
+        if (anim.GetBool("Scared?"))
+        {
+            RedDirection();
+            previousSpot = (currentMovementIndex + 2) % 4;
+            borderPos = -1;
             return;
         }
 
@@ -142,12 +176,6 @@ public class GhostController : MonoBehaviour
             }
         }
         RandomDecision(validSpots);
-
-        string s = "";
-        foreach (int i in validSpots)
-        {
-            s += i + " ";
-        }
     }
 
     private void YellowDirection()
@@ -165,7 +193,43 @@ public class GhostController : MonoBehaviour
 
     private void GreenDirection()
     {
-        YellowDirection();
+        int[] validSpots = { -1, -1, -1, -1 };
+        int shortestDistance = int.MaxValue;
+        ChooseCornerPos(gameObject.transform.position);
+        for (int i = 0; i < 4; i++)
+        {
+            if (!validMovement[i])
+            {
+                continue;
+            }
+
+            sensorDistance[i] = sensor[i].CalculateDistance(corners[borderPos]);
+            if (sensorDistance[i] < shortestDistance)
+            {
+                shortestDistance = sensorDistance[i];
+                validSpots = new int[] { -1, -1, -1, -1 };
+                validSpots[i] = i;
+            }
+            else if (sensorDistance[i] == shortestDistance)
+            {
+                validSpots[i] = i;
+            }
+        }
+        RandomDecision(validSpots);
+    }
+
+    private void ChooseCornerPos(Vector2 pos)
+    {
+        if (borderPos == -1)
+        {
+            borderPos = (pos.y > 0) ? 2 : 9;
+            return;
+        }
+
+        if (corners[borderPos] == pos)
+        {
+            borderPos = (borderPos + 1) % corners.Length;
+        }
     }
 
     private void RandomDecision(int[] validSpots)
@@ -229,6 +293,20 @@ public class GhostController : MonoBehaviour
         }
 
         prevPos = gameObject.transform.position;
+        if (anim.GetBool("Dead?"))
+        {
+            if (prevPos == spawnPoint)
+            {
+                anim.SetBool("Dead?", false);
+                RandomisedSpawn();
+            }
+            else
+            {
+                tween.setTweenValues(prevPos, spawnPoint, Mathf.Sqrt(Vector2.Distance(prevPos, spawnPoint)) * 0.25f);
+            }
+            return;
+        }
+
         switch (currentMovementIndex)
         {
             case 0:
@@ -250,12 +328,11 @@ public class GhostController : MonoBehaviour
         anim.SetInteger("ULDR", currentMovementIndex);
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+    private void RandomisedSpawn()
     {
-        if (collision.transform.tag == "Wall")
-        {
-            gameObject.transform.position = prevPos;
-            tween.stopTween();
-        }
+        int[] randX = { 13, 14 };
+        int[] randY = { -3, 3 };
+        destination = new Vector2(randX[Random.Range(0, 2)], randY[Random.Range(0, 2)]);
+        borderPos = -1;
     }
 }
