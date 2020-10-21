@@ -4,9 +4,9 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - pacman: {fileID: 5705936454152395218, guid: 6ebed8e1f37dc46439f52ab1f684c4ad,
-      type: 3}
-  - swim: {instanceID: 0}
+  - pop: {instanceID: 0}
+  - wallBump: {instanceID: 0}
+  - manualPacAnim: {fileID: 9100000, guid: d43b83a13d8650d4fa88bfb9cfcaaf7a, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PacStudentController : MonoBehaviour
 {
@@ -20,7 +22,6 @@ public class PacStudentController : MonoBehaviour
     public AudioClip pop;
     public AudioClip wallBump;
 
-
     private string[] directions = { "Up", "Left", "Down", "Right" };
     private KeyCode[] movement = new KeyCode[] {
         KeyCode.W, KeyCode.A,
@@ -30,6 +31,8 @@ public class PacStudentController : MonoBehaviour
         KeyCode.UpArrow, KeyCode.LeftArrow,
         KeyCode.DownArrow, KeyCode.RightArrow
     };
+
+    private bool isLevel2;
 
     // Start is called before the first frame update
     void Start()
@@ -52,10 +55,11 @@ public class PacStudentController : MonoBehaviour
             particles[i].enabled = false;
         }
 
+        isLevel2 = SceneManager.GetActiveScene().name.Equals("InnovationScene");
+        pacAudioSource = gameObject.GetComponent<AudioSource>();
+
         pacAnim = gameObject.GetComponent<Animator>();
         pacAnim.speed = 0;
-
-        pacAudioSource = gameObject.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -76,15 +80,52 @@ public class PacStudentController : MonoBehaviour
         {
             if (Input.GetKeyDown(movement[i]) || Input.GetKeyDown(movement2[i]))
             {
-                lastInput = directions[i];
+                if (!isLevel2)
+                {
+                    lastInput = directions[i];
+                } else {
+                    NoBacktracking(i);
+                }
+                return;
             }
         }
     }
+    private void NoBacktracking(int direction)
+    {
+        int index = 0;
+
+        int zRot = (int)gameObject.transform.rotation.eulerAngles.z;
+        switch(zRot)
+        {
+            case 90:
+                index = 1;
+                break;
+
+            case 180:
+                index = 2;
+                break;
+
+            case 270:
+                index = 3;
+                break;
+        }
+
+        if (!directions[(index + 2) % 4].Equals(directions[direction]))
+        {
+            lastInput = directions[direction];
+        }
+    }
+
     private void changeDirection()
     {
         if (tween.hasTween || lastInput.Equals(currentInput) || fishSenses.IsThereAWall(lastInput))
         {
             return;
+        }
+
+        if (!OutsideBoundary().Equals(""))
+        {
+            lastInput = currentInput;
         }
 
         currentInput = lastInput;
@@ -97,6 +138,7 @@ public class PacStudentController : MonoBehaviour
             }
         }
     }
+
     private void updatePosition()
     {
         if (tween.hasTween)
@@ -104,33 +146,36 @@ public class PacStudentController : MonoBehaviour
             gameObject.transform.position = tween.calculatePosition(Time.deltaTime);
         } else
         {
-            if (gameObject.transform.position.x < 1)
-            {
-                gameObject.transform.position = new Vector3(26f, 0f, -1);
-            }
-            else if (gameObject.transform.position.x > 26)
-            {
-                gameObject.transform.position = new Vector3(1f, 0f, -1);
-            }
-            
             prevPos = gameObject.transform.position;
+            string boundary = OutsideBoundary();
+            if (!boundary.Equals(""))
+            {
+                if (boundary.Equals("Left"))
+                {
+                    gameObject.transform.position = new Vector3(27f, prevPos.y, -1);
+                } else
+                {
+                    gameObject.transform.position = new Vector3(1f, prevPos.y, -1);
+                }
+            }
 
+            prevPos = gameObject.transform.position;
             switch (currentInput)
             {
                 case "Up":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y + 1), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector3(prevPos.x, prevPos.y + 1, -1f), 0.25f);
                     break;
 
                 case "Left":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x - 1, prevPos.y), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector3(prevPos.x - 1, prevPos.y, -1f), 0.25f);
                     break;
 
                 case "Down":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x, prevPos.y - 1), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector3(prevPos.x, prevPos.y - 1, -1f), 0.25f);
                     break;
 
                 case "Right":
-                    tween.setTweenValues(prevPos, new Vector2(prevPos.x + 1, prevPos.y), 0.25f);
+                    tween.setTweenValues(prevPos, new Vector3(prevPos.x + 1, prevPos.y, -1f), 0.25f);
                     break;
 
                 default:
@@ -151,6 +196,19 @@ public class PacStudentController : MonoBehaviour
                 pacAnim.speed = 1;
             }
         }
+    }
+
+    private string OutsideBoundary()
+    {
+        if (gameObject.transform.position.x == 0)
+        {
+            return "Left";
+        }
+        else if (gameObject.transform.position.x == 27)
+        {
+            return "Right";
+        }
+        return "";
     }
 
     void OnCollisionStay2D(Collision2D collider)
@@ -257,7 +315,8 @@ public class PacStudentController : MonoBehaviour
 
         GUIText.DecrementLife();
         pacAnim.SetBool("Dead", false);
-        gameObject.transform.position = new Vector2(1f, 13f);
+        float x = isLevel2 ? 2f : 1f;
+        gameObject.transform.position = new Vector2(x, 13f);
         gameObject.transform.eulerAngles = new Vector3(0f, 0f, -90f);
 
         SetHitBox(true);

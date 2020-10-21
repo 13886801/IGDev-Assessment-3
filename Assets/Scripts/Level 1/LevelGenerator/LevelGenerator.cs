@@ -1,5 +1,6 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelGenerator : MonoBehaviour
@@ -18,12 +19,13 @@ public class LevelGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        loadLevel();
-        loadPacStudent();
+        bool isLevel2 = SceneManager.GetActiveScene().name.Equals("InnovationScene");
+        loadLevel(isLevel2);
+        loadPacStudent(isLevel2);
         loadJellyfish();
     }
 
-    private void loadLevel()
+    private void loadLevel(bool isLevel2)
     {
         GameObject topLeft = new GameObject();
         topLeft.transform.SetParent(gameObject.transform);
@@ -53,13 +55,12 @@ public class LevelGenerator : MonoBehaviour
 
         string[] names = { "topRight", "bottomLeft", "bottomRight"};
         Vector3[] positions = { new Vector3(27, 0, 0), new Vector3(0, 0, 0), new Vector3(27, 0, 0) };
-        Vector3[] scales = { new Vector3(-1, 1, 1), new Vector3(1, -1, 1), new Vector3(-1, -1, 1) };
+        Vector3[] rots = { new Vector3(0, 180, 0), new Vector3(180, 0, 0), new Vector3(180, 180, 0) };
         GameObject[] levelParts = new GameObject[3];
 
         for (int i = 0; i < 3; i++)
         {
-            levelParts[i] = Instantiate(topLeft, positions[i], Quaternion.identity, gameObject.transform);
-            levelParts[i].transform.localScale = scales[i];
+            levelParts[i] = Instantiate(topLeft, positions[i], Quaternion.Euler(rots[i]), gameObject.transform);
             levelParts[i].name = names[i];
             if (i != 0)
             {
@@ -71,9 +72,9 @@ public class LevelGenerator : MonoBehaviour
 
             foreach (Transform childTile in levelParts[i].transform)
             {
-                if (childTile.gameObject.tag != "Wall")
+                if (!childTile.gameObject.CompareTag("Wall"))
                 {
-                    childTile.localScale = childTile.parent.localScale;
+                    childTile.localRotation = childTile.parent.localRotation;
                 }
             }
         }
@@ -81,30 +82,33 @@ public class LevelGenerator : MonoBehaviour
         GameObject points = new GameObject();
         points.name = "points";
         points.transform.SetParent(gameObject.transform);
-        Transform part;
-        Transform tile;
 
-        for (int i = 0; i < 4; i++)
+
+        if (isLevel2)
         {
-            part = gameObject.transform.GetChild(i);
-            for (int j = 0; j < part.childCount; j++)
+            topLeft.transform.position = new Vector3(14, 0, 0);
+            levelParts[0].transform.position = new Vector3(14, 0, 0);
+            levelParts[1].transform.position = new Vector3(14, 0, 0);
+            levelParts[2].transform.position = new Vector3(14, 0, 0);
+        }
+
+        foreach (string tag in new string[] { "Points", "PowerUp" })
+        {
+            foreach (GameObject tile in GameObject.FindGameObjectsWithTag(tag))
             {
-                tile = part.GetChild(j);
-                if (tile.CompareTag("Points") || tile.CompareTag("PowerUp"))
-                {
-                    tile.SetParent(points.transform);
-                }
+                tile.transform.SetParent(points.transform);
             }
         }
         textDisplay.BubbleCount(points);
     }
 
-    private void loadPacStudent()
+    private void loadPacStudent(bool isLevel2)
     {
         GameObject pacStudentContainer= new GameObject();
         pacStudentContainer.name = "pacStudent";
 
-        Instantiate(pacStudent[0], new Vector3(1, 13, -1),
+        float x = (isLevel2) ? 2f : 1f;
+        Instantiate(pacStudent[0], new Vector3(x, 13, -1),
             Quaternion.Euler(new Vector3(0f, 0f, 270f)),
             pacStudentContainer.transform).name = "pacBody";
 
@@ -117,10 +121,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject jellyfishes = new GameObject();
         jellyfishes.name = "Jellyfishes";
 
-        Vector3[] positions = {
-            new Vector3(11f, 0, 0), new Vector3(12f, 0, 0),
-            new Vector3(15f, 0, 0), new Vector3(16f, 0, 0),
-        };
+        float[] xPos = { 11f, 12f, 15f, 16f };
 
         Color[] colours = {
             new Color(1, 12f / 255, 0), new Color(1, 81f / 255, 1),
@@ -132,7 +133,7 @@ public class LevelGenerator : MonoBehaviour
         Transform canvas;
         for (int i = 0; i < 4; i++)
         {
-            colouredJellyfish = Instantiate(jellyFish, positions[i],
+            colouredJellyfish = Instantiate(jellyFish, new Vector2(xPos[i], 0),
                 quaternion.identity, jellyfishes.transform);
 
             colouredJellyfish.GetComponent<SpriteRenderer>().color = colours[i];

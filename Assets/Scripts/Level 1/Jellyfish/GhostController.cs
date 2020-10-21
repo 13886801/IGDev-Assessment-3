@@ -1,6 +1,5 @@
-﻿using System.Threading;
-using UnityEngine;
-using UnityEngine.Assertions.Must;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GhostController : MonoBehaviour
 {
@@ -19,6 +18,7 @@ public class GhostController : MonoBehaviour
 
     private bool[] validMovement = new bool[4];
     private int[] sensorDistance = new int[4];
+    private bool isLevel2;
 
     private int borderPos;
 
@@ -31,6 +31,11 @@ public class GhostController : MonoBehaviour
         spawnPoint = gameObject.transform.position;
         RandomisedSpawn();
 
+        isLevel2 = SceneManager.GetActiveScene().name.Equals("InnovationScene");
+        if (isLevel2)
+        {
+            destination = Vector2.zero;
+        }
         corners = new Vector2[] {
             new Vector2(1, 13), //Top Left
             new Vector2(12, 13), //Top Middle Left
@@ -104,6 +109,13 @@ public class GhostController : MonoBehaviour
             RedDirection();
             previousSpot = (currentMovementIndex + 2) % 4;
             borderPos = -1;
+            return;
+        }
+
+        if (isLevel2)
+        {
+            PinkDirection();
+            previousSpot = (currentMovementIndex + 2) % 4;
             return;
         }
 
@@ -330,6 +342,10 @@ public class GhostController : MonoBehaviour
 
     private void RandomisedSpawn()
     {
+        if (isLevel2)
+        {
+            return;
+        }
         int[] randX = { 13, 14 };
         int[] randY = { -3, 3 };
         destination = new Vector2(randX[Random.Range(0, 2)], randY[Random.Range(0, 2)]);

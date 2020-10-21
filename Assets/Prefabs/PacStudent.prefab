@@ -122,6 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pop: {fileID: 8300000, guid: adf17a0831701494a8c93e360019d2fa, type: 3}
   wallBump: {fileID: 8300000, guid: 749e993e4c69eb44fa65c983f9af4861, type: 3}
+  manualPacAnim: {fileID: 9100000, guid: d43b83a13d8650d4fa88bfb9cfcaaf7a, type: 2}
 --- !u!82 &-5579008247572054320
 AudioSource:
   m_ObjectHideFlags: 0

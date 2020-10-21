@@ -3,24 +3,31 @@
 public class PacStudentCollider : MonoBehaviour
 {
     private bool col = false;
+    private int collisionCount;
 
     public bool isThereAWall()
     {
         return col;
     }
 
-    void OnCollisionExit2D(Collision2D collision)
+    void Update()
     {
-        col = false;
+        col = collisionCount > 0;
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Wall")
+        if (collision.transform.tag == "Wall")
         {
-            col = true;
-            return;
+            collisionCount++;
         }
-        col = false;
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Wall")
+        {
+            collisionCount--;
+        }
     }
 }

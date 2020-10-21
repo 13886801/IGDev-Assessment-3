@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         FindButtons();
         AddButtonAction("Level 1");
+        AddButtonAction("Level 2");
     }
 
     private void AddButtonAction(string buttonName)
@@ -27,7 +28,11 @@ public class LevelManager : MonoBehaviour
         switch(buttonNames)
         {
             case "Level 1":
-                StartCoroutine("LoadingScreen", "PacStudent - Level 1");
+                StartCoroutine("LoadingScreen", "LevelScene");
+                break;
+
+            case "Level 2":
+                StartCoroutine("LoadingScreen", "InnovationScene");
                 break;
 
             case "QuitButton":
@@ -68,7 +73,11 @@ public class LevelManager : MonoBehaviour
                 Destroy(gameObject);
                 break;
 
-            case "PacStudent - Level 1":
+            case "LevelScene":
+                AddButtonAction("QuitButton");
+                break;
+
+            case "InnovationScene":
                 AddButtonAction("QuitButton");
                 break;
 
